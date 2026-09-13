@@ -149,7 +149,11 @@ h3{font-size:clamp(20px,1.7vw,24px)}
 .zs__item b{font-size:15px;font-weight:700}
 .zs__times{display:flex;gap:6px}
 .zs__times span{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:var(--pill);background:var(--blue-100);color:var(--navy-900);font-size:12px;font-weight:800;white-space:nowrap}
-.zs__times span i{font-style:normal;font-weight:600;opacity:.6;font-size:10px;letter-spacing:.06em}
+.zs__times span i{font-style:normal;font-weight:800;font-size:10px;letter-spacing:.06em}
+.zs__times span:nth-child(1) i{color:var(--sun-500)}
+.zs__times span:nth-child(2) i{color:var(--blue-500)}
+.zs__times span:nth-child(3) i{color:var(--navy-800)}
+.zs__item.is-active .zs__times span:nth-child(3) i{color:#9fc0e6}
 .zs__item.is-active .zs__times span{background:rgb(255 255 255 / .12);color:#fff}
 .zs__hint{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12px;font-weight:700;color:var(--blue-600)}
 .zs__hint svg{width:16px;height:16px;animation:nudge 1.6s ease-in-out infinite}
