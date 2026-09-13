@@ -16,37 +16,32 @@
   const force = () => $$('.reveal:not(.is-visible)').forEach(el => { const r = el.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) el.classList.add('is-visible'); });
   setTimeout(force, 500); addEventListener('scroll', force, { passive: true });
 
-  /* Zona Sul — sticky scroller */
-  const wrap = $('.zs-wrap'); const list = $('#zs-list'); const items = $$('.zs__item'); const media = $('.zs__media'); const imgs = $$('.zs__media img'); const cap = $('.zs__caption b');
-  if (wrap && items.length) {
-    const track = document.createElement('div'); track.className = 'zs__track'; items.forEach(i => track.appendChild(i)); list.appendChild(track);
-    const prog = document.createElement('div'); prog.className = 'zs__progress'; prog.innerHTML = '<i></i>'; list.parentElement.appendChild(prog);
+  /* Zona Sul — lista rolável; item mais centralizado fica ativo */
+  const list = $('#zs-list'); const items = $$('.zs__item'); const media = $('.zs__media'); const imgs = $$('.zs__media img'); const cap = $('.zs__caption b');
+  if (list && items.length) {
     let cur = -1;
     const pick = (n) => {
-      n = Math.max(0, Math.min(items.length - 1, n)); if (n === cur) return; cur = n;
-      const btn = items[n];
+      if (n === cur) return; cur = n; const btn = items[n];
       items.forEach(i => i.classList.toggle('is-active', i === btn));
       const key = btn.dataset.img;
       imgs.forEach(i => i.classList.toggle('is-active', i.dataset.key === key));
       media.classList.toggle('is-empty', !key);
       cap.textContent = btn.querySelector('b').textContent; $('.zs__empty b').textContent = cap.textContent;
-      // keep active item in view inside the list
-      const lh = list.clientHeight, top = btn.offsetTop, h = btn.offsetHeight, th = track.scrollHeight;
-      let y = top - lh / 2 + h / 2; y = Math.max(0, Math.min(th - lh, y));
-      track.style.transform = `translateY(${-y}px)`;
-      prog.firstChild.style.width = ((n + 1) / items.length * 100) + '%';
     };
-    const onScroll = () => {
-      const r = wrap.getBoundingClientRect(); const total = wrap.offsetHeight - innerHeight;
-      if (total <= 0) return;
-      const p = Math.min(1, Math.max(0, -r.top / total));
-      pick(Math.floor(p * items.length));
+    const fromScroll = () => {
+      const lr = list.getBoundingClientRect(); const atEnd = list.scrollTop + list.clientHeight >= list.scrollHeight - 2;
+      if (atEnd) return pick(items.length - 1);
+      if (list.scrollTop <= 2) return pick(0);
+      const mid = lr.top + lr.height / 2; let best = 0, bd = 1e9;
+      items.forEach((it, i) => { const r = it.getBoundingClientRect(); const d = Math.abs(r.top + r.height / 2 - mid); if (d < bd) { bd = d; best = i; } });
+      pick(best);
     };
-    addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll(); if (cur < 0) pick(0);
-    // click jumps the page to that item's scroll position
-    items.forEach((b, i) => b.addEventListener('click', () => {
-      const total = wrap.offsetHeight - innerHeight; const y = wrap.offsetTop + (i + 0.5) / items.length * total; scrollTo({ top: y, behavior: 'smooth' });
-    }));
+    let raf; list.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fromScroll); }, { passive: true });
+    items.forEach((b, i) => {
+      b.addEventListener('click', () => { pick(i); b.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
+      b.addEventListener('mouseenter', () => { if (matchMedia('(hover:hover)').matches) pick(i); });
+    });
+    pick(0);
   }
 
   /* Hero video: fall back to poster if it fails */
