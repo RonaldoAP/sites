@@ -61,6 +61,25 @@
       document.head.appendChild(mt);
     }
   }
-  if (document.body) run();
-  else document.addEventListener("DOMContentLoaded", run);
+  // reaplica em conteúdo inserido dinamicamente (sliders, etc.)
+  function observe() {
+    if (lang === "pt" || !document.body) return;
+    var mo = new MutationObserver(function (muts) {
+      for (var i = 0; i < muts.length; i++) {
+        var added = muts[i].addedNodes;
+        for (var j = 0; j < added.length; j++) {
+          var n = added[j];
+          if (n.nodeType === 1) { applyText(n); applyAttrs(n); }
+          else if (n.nodeType === 3 && n.nodeValue && n.nodeValue.trim()) {
+            var t = tr(n.nodeValue);
+            if (t != null) n.nodeValue = n.nodeValue.match(/^\s*/)[0] + t + n.nodeValue.match(/\s*$/)[0];
+          }
+        }
+      }
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+  }
+  if (document.body) { run(); observe(); }
+  else document.addEventListener("DOMContentLoaded", function () { run(); observe(); });
+  window.addEventListener("load", function () { run(); });
 })();
