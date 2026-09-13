@@ -53,6 +53,13 @@
       if (tt != null) document.title = tt;
     }
     document.documentElement.setAttribute("lang", lang === "pt" ? "pt-BR" : lang);
+    document.documentElement.setAttribute("translate", "no");
+    document.documentElement.classList.add("notranslate");
+    if (!document.querySelector('meta[name="google"][content="notranslate"]')) {
+      var mt = document.createElement("meta");
+      mt.name = "google"; mt.content = "notranslate";
+      document.head.appendChild(mt);
+    }
   }
   if (document.body) run();
   else document.addEventListener("DOMContentLoaded", run);
