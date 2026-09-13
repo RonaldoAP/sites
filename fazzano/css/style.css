@@ -61,7 +61,7 @@ h3{font-size:clamp(20px,1.6vw,24px);font-weight:400}
 .header.is-dark.is-scrolled .logo{color:var(--navy-900)}
 .header .container{display:flex;align-items:center;justify-content:space-between;gap:30px}
 .nav{display:flex;align-items:center;gap:34px}
-.nav a{font-size:13px;font-weight:500;letter-spacing:.06em;color:var(--navy-900);transition:opacity .3s}
+.nav a{font-size:12px;font-weight:400;letter-spacing:.18em;text-transform:uppercase;color:var(--navy-900);transition:opacity .3s}
 .nav a:hover{opacity:.6}
 .burger{display:none;width:44px;height:44px;border-radius:50%;border:1px solid currentColor;place-items:center;color:var(--navy-900)}
 .header.is-dark:not(.is-scrolled) .burger{color:#fff}
