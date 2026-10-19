@@ -23,6 +23,22 @@
   $('.qnav .next')?.addEventListener('click', () => show(q + 1));
   if (quotes.length) { show(0); setInterval(() => show(q + 1), 7000); }
 
+
+  $$('.acc details').forEach(d => {
+    const sum = $('summary', d), body = $('p', d);
+    sum.addEventListener('click', e => {
+      e.preventDefault();
+      if (d.dataset.anim) return;
+      const opening = !d.open, start = d.offsetHeight;
+      if (opening) d.open = true;
+      const end = opening ? sum.offsetHeight + body.offsetHeight : sum.offsetHeight;
+      d.dataset.anim = 1;
+      d.animate({ height: [start + 'px', end + 'px'] }, { duration: 550, easing: 'cubic-bezier(.16,1,.3,1)' })
+        .onfinish = () => { if (!opening) d.open = false; delete d.dataset.anim; };
+      body.animate({ opacity: opening ? [0, 1] : [1, 0], transform: opening ? ['translateY(-6px)', 'none'] : ['none', 'translateY(-6px)'] }, { duration: 450, easing: 'ease', fill: 'none' });
+    });
+  });
+
   document.addEventListener('click', e => { if (e.target.closest('a[href="#"]')) e.preventDefault(); });
   $$('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
 })();
