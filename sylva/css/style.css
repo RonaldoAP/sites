@@ -412,3 +412,4 @@ p,.lead{text-wrap:pretty}
 .works__grid{gap:40px 12px}
 .work figure{border-radius:4px}
 .voices__title{margin-bottom:clamp(32px,4vw,52px);max-width:18ch}
+@media(max-width:700px){.leader__grid{grid-template-columns:1fr;grid-template-areas:"q" "p" "b";row-gap:28px}.leader__quote{max-width:none}.leader__photo{min-height:0;height:auto;aspect-ratio:4/5;max-width:none}}
